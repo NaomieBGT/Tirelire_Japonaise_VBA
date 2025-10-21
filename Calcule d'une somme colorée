@@ -1,0 +1,32 @@
+// Fonction pour calculer la somme des cellules colorées
+function sumColoredCells(rangeNotation) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var range = sheet.getRange(rangeNotation);
+  var cells = range.getValues();
+  var colors = range.getBackgrounds();
+  var sum = 0;
+
+  for (var i = 0; i < cells.length; i++) {
+    for (var j = 0; j < cells[i].length; j++) {
+      // Vérifie si la cellule a une couleur définie (autre que "aucune couleur")
+      if (colors[i][j] !== "#ffffff" && colors[i][j] !== "#000000" && colors[i][j] !== "#ffffff00" && colors[i][j] !== "#00000000") {
+        var value = parseFloat(cells[i][j]);
+        if (!isNaN(value)) {
+          sum += value;
+        }
+      }
+    }
+  }
+
+  return sum;
+}
+
+// Fonction déclenchée automatiquement lors de la modification de la feuille
+function onEdit(e) {
+  var sheet = e.source.getActiveSheet();
+  var rangeNotation = "D7:S22"; // Spécifiez la plage à vérifier
+  var sum = sumColoredCells(rangeNotation);
+  
+  // Mettez à jour une cellule spécifique avec la somme calculée, ici O24
+  sheet.getRange("O24").setValue(sum);
+}
